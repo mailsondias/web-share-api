@@ -24,12 +24,17 @@
 
   <script>
     let shareData = {
-      title: 'MDN',
-      text: 'Learn web development on MDN!',
-      url: 'https://developer.mozilla.org',
+      url: 'https://img.freepik.com/fotos-gratis/linda-cor-de-camaleao-pantera-camaleao-pantera-no-galho_488145-1121.jpg',
     }
 
+    const response = async () => await fetch("https://firebasestorage.googleapis.com/v0/b/react-portoflio.appspot.com/o/resume%2FMai%CC%81lson's%20Resume%202022.pdf?alt=media&token=651a6fd6-fe86-4945-9b7d-79c7ae68a113")
+    const buffer = async () => await response.arrayBuffer()
+
+    const pdf = new File([buffer], "mailsons-resume.pdf", { type: "application/pdf" });
+    const files = [pdf];
+
     const resultPara = document.querySelector('.result');
+    const btn = document.querySelector('button');
 
     if (!navigator.canShare) {
       resultPara.textContent = 'navigator.canShare() not supported.';
@@ -39,6 +44,20 @@
     } else {
       resultPara.textContent = 'Specified data cannot be shared.';
     }
+
+    // Share must be triggered by "user activation"
+    btn.addEventListener('click', async () => {
+      try {
+        if (navigator.canShare({ files }))
+          await navigator.share({ files })
+        else 
+          await navigator.share(shareData)
+
+        resultPara.textContent = 'MDN shared successfully'
+      } catch (err) {
+        resultPara.textContent = `Error: ${err}`
+      }
+    });
   </script>
 </body>
 
